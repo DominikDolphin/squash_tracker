@@ -1,12 +1,8 @@
 import {
-  Button,
   Container,
   Grid,
-  Card,
-  CardContent,
-  CardHeader,
 } from "@mui/material";
-import MatchTable from './components/MatchTable'
+import MatchCard from "./components/MatchCard";
 
 function App() {
 
@@ -15,23 +11,7 @@ function App() {
       <Container>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Card>
-              <CardHeader
-                title="Winner - Michael"
-                subheader="Best out of 3"
-                style={{ paddingBottom: "0px", textAlign: "center" }}
-              />
-              <CardContent style={{ PaddingTop: "0px" }}>
-                <MatchTable />
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  style={{ marginTop: "5px" }}
-                >
-                  Add Game
-                </Button>
-              </CardContent>
-            </Card>
+            <MatchCard />
           </Grid>
         </Grid>
       </Container>

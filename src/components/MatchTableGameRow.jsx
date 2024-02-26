@@ -1,8 +1,16 @@
 import { Typography, TableRow, TableCell } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { Delete, Edit } from "@mui/icons-material";
+import DeleteGameModal from "./DeleteGameModal";
 
-export default function MatchTableGameRow({ rowKey, rowData, handleDelete }) {
+export default function MatchTableGameRow({
+  rowKey,
+  rowData,
+  handleDelete,
+  openModal,
+  handleConfirmDelete,
+  handleCloseModal,
+}) {
   return (
     <>
       <TableRow key={rowKey}>
@@ -31,6 +39,12 @@ export default function MatchTableGameRow({ rowKey, rowData, handleDelete }) {
           </div>
         </TableCell>
       </TableRow>
+
+      <DeleteGameModal
+        isOpen={openModal}
+        handleConfirmDelete={() => handleConfirmDelete(rowKey)}
+        handleCloseModal={handleCloseModal}
+      />
     </>
   );
 }
