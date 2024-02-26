@@ -2,15 +2,29 @@ import { Typography, TableRow, TableCell } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import { Delete, Edit } from "@mui/icons-material";
 import DeleteGameModal from "./DeleteGameModal";
+import { useState } from "react";
 
 export default function MatchTableGameRow({
   rowKey,
   rowData,
-  handleDelete,
-  openModal,
-  handleConfirmDelete,
-  handleCloseModal,
+  updateTableOnDelete
 }) {
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleDelete = (id) => {
+    setOpenModal(true);
+  };
+  
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleConfirmDelete = () => {
+    setOpenModal(false);
+    updateTableOnDelete(rowKey);
+  };
+
   return (
     <>
       <TableRow key={rowKey}>

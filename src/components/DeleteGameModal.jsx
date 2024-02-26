@@ -19,14 +19,15 @@ export default function DeleteGameModal({
           left: "50%",
           transform: "translate(-50%, -50%)",
           backgroundColor: "white",
-          padding: 30,
+          padding: 10,
+          width: 300
         }}
       >
         <Typography id="delete-modal-title" variant="h6">
           Confirm Deletion
         </Typography>
         <Typography id="delete-modal-description" variant="body1">
-          Are you sure you want to delete this entry?
+          Are you sure you want to delete this game?
         </Typography>
         <div
           style={{

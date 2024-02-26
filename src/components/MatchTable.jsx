@@ -16,19 +16,9 @@ export default function MatchTable() {
     { id: 3, winner: "Michael", winnerScore: 14, loserScore: 12 },
   ]);
 
-  const handleDelete = (id) => {
-    setOpenModal(true);
-  };
-  const [openModal, setOpenModal] = useState(false);
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleConfirmDelete = (id) => {
+  const updateTableOnDelete = (id) =>{
     setSampleData(sampleData.filter((item) => item.id !== id));
-    setOpenModal(false);
-  };
+  }
 
   return (
     <>
@@ -51,10 +41,7 @@ export default function MatchTable() {
             <MatchTableGameRow
               key={row.id}
               rowData={row}
-              handleDelete={() => handleDelete(row.id)}
-              handleConfirmDelete={() => handleConfirmDelete(row.id)}
-              handleCloseModal={handleCloseModal}
-              openModal={openModal}
+              updateTableOnDelete={()=>updateTableOnDelete(row.id)}
             />
           ))}
         </TableBody>
