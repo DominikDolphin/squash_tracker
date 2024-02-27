@@ -5,9 +5,11 @@ import {
   TableRow,
   TableCell,
   TableHead,
+  Button,
 } from "@mui/material";
 import { useState } from "react";
 import MatchTableGameRow from "./MatchTableGameRow";
+import AddGameModal from "./AddGameModal";
 
 export default function MatchTable() {
   const [sampleData, setSampleData] = useState([
@@ -20,6 +22,9 @@ export default function MatchTable() {
     setSampleData(sampleData.filter((item) => item.id !== id));
   }
 
+  const addGameToTable = (gameData) => {
+    console.log("Adding to game");
+  }
   return (
     <>
       <Table>
@@ -46,6 +51,16 @@ export default function MatchTable() {
           ))}
         </TableBody>
       </Table>
+      <Button 
+        variant="outlined" 
+        fullWidth 
+        style={{ marginTop: "5px" }}
+        onClick={()=>addGameToTable()}
+        >
+          Add Game
+        </Button>
+
+        <AddGameModal isOpen={true}/>
     </>
   );
 }

@@ -1,6 +1,5 @@
 import { Button, Card, CardContent, CardHeader } from "@mui/material";
 import MatchTable from "./MatchTable";
-
 export default function MatchCard() {
   return (
     <Card>
@@ -11,9 +10,6 @@ export default function MatchCard() {
       />
       <CardContent style={{ PaddingTop: "0px" }}>
         <MatchTable />
-        <Button variant="outlined" fullWidth style={{ marginTop: "5px" }}>
-          Add Game
-        </Button>
       </CardContent>
     </Card>
   );
