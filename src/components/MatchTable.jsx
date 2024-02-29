@@ -11,11 +11,11 @@ import { useState } from "react";
 import MatchTableGameRow from "./MatchTableGameRow";
 import AddGameModal from "./AddGameModal";
 
-export default function MatchTable() {
+export default function MatchTable({players}) {
   const [sampleData, setSampleData] = useState([
-    { id: 1, winner: "Michael", winnerScore: 11, loserScore: 8 },
-    { id: 2, winner: "Dominik", winnerScore: 11, loserScore: 7 },
-    { id: 3, winner: "Michael", winnerScore: 14, loserScore: 12 },
+    { id: 1, winner: players[0].name, winnerScore: 11, loserScore: 8 },
+    { id: 2, winner: players[1].name, winnerScore: 11, loserScore: 7 },
+    { id: 3, winner: players[0].name, winnerScore: 14, loserScore: 12 },
   ]);
 
   const [isOpenAddGameModal, setIsOpenAddGameModal] = useState(false)
@@ -25,12 +25,10 @@ export default function MatchTable() {
   }
 
   const addGameToMatch = (data) => {
-    // console.log("Adding to game");
-    setSampleData([...sampleData, data])
+    setSampleData([...sampleData, data]);
   }
 
   const handleModalOpen = () => {
-    // console.log("Adding to game");
     setIsOpenAddGameModal(true)
   }
 
@@ -73,7 +71,7 @@ export default function MatchTable() {
         Add Game
       </Button>
 
-      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} handleInsertGame={addGameToMatch} />
+      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} addGameToMatch={addGameToMatch} players={players}/>
     </>
   );
 }
