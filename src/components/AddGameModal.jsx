@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Typography, Button, TextField } from "@mui/material";
+import { Modal, Typography, Button, TextField, Paper, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
 export default function AddGameModal({
   rowKey,
@@ -7,96 +7,73 @@ export default function AddGameModal({
   handleInsertButton,
   handleCloseModal,
 }) {
-  const [winner, setWinner] = useState("");
-  const [score1, setScore1] = useState("");
-  const [score2, setScore2] = useState("");
 
-  const handleWinnerChange = (value) => {
-    setWinner(value);
-  };
+  const [value, setValue] = useState('');
 
-  const handleScore1Change = (event) => {
-    setScore1(event.target.value);
-  };
-
-  const handleScore2Change = (event) => {
-    setScore2(event.target.value);
+  const handleChange = (event) => {
+    const inputValue = event.target.value;
+    // Check if the input is a valid number
+    if (!isNaN(inputValue)) {
+      setValue(inputValue);
+    }
   };
 
   return (
-    <Modal
-      aria-labelledby="delete-modal-title"
-      aria-describedby="delete-modal-description"
+    <Dialog
       open={isOpen}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      fullWidth
     >
-      <div
-        style={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "white",
-          padding: 10,
-          width: 300,
-        }}
-      >
-        <Typography id="delete-modal-title" variant="h6">
-          Insert New Game
-        </Typography>
+      <DialogTitle id="alert-dialog-title">
+        {"Insert Game"}
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
 
-        <div style={{ marginTop: 20 }}>
-          <Typography variant="subtitle1">Winner:</Typography>
-          <Button
-            variant={winner === "Team1" ? "contained" : "outlined"}
-            color="primary"
-            onClick={() => handleWinnerChange("Team1")}
-            style={{ marginRight: 10 }}
-          >
-            Team 1
-          </Button>
-          <Button
-            variant={winner === "Team2" ? "contained" : "outlined"}
-            color="primary"
-            onClick={() => handleWinnerChange("Team2")}
-          >
-            Team 2
-          </Button>
-        </div>
+        </DialogContentText>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell width={'65%'}>Player</TableCell>
+                <TableCell align="center">Score</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow key={1}>
+                <TableCell>
+                  Michael
+                </TableCell>
+                <TableCell>
+                  <TextField 
+                    id="Score" 
+                    label="" 
+                    value={value}
+                    onChange={handleChange}
+                    inputProps={{ inputMode: 'numeric' }} 
+                  />
+                </TableCell>
+              </TableRow>
+              {/* <TableRow key={2}>
+                <TableCell>
+                  Dominik
+                </TableCell>
+                <TableCell>
+                  <TextField id="Score" label="" inputProps={{ inputMode: 'numeric' }} />
+                </TableCell>
+              </TableRow> */}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-        <div style={{ marginTop: 20, display: "flex" }}>
-          <div style={{ marginRight: 0 }}>
-            <Typography variant="subtitle1">Score:</Typography>
-            <TextField
-              label="Team 1 Score"
-              variant="outlined"
-              value={score1}
-              onChange={handleScore1Change}
-              type="number"
-            />
-          </div>
-          <div>
-            <Typography variant="subtitle1" style={{ color: "transparent" }}>
-              Placeholder
-            </Typography>
-            <TextField
-              label="Team 2 Score"
-              variant="outlined"
-              value={score2}
-              onChange={handleScore2Change}
-              type="number"
-            />
-          </div>
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 20 }}>
-          <Button variant="contained" color="primary" onClick={handleInsertButton}>
-            Insert
-          </Button>
-          <Button variant="contained" onClick={handleCloseModal}>
-            Cancel
-          </Button>
-        </div>
-      </div>
-    </Modal>
+      </DialogContent>
+      <DialogActions>
+        <Button color="error">Cancel</Button>
+        <Button autoFocus>
+          Insert
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
