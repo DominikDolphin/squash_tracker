@@ -18,13 +18,26 @@ export default function MatchTable() {
     { id: 3, winner: "Michael", winnerScore: 14, loserScore: 12 },
   ]);
 
-  const updateTableOnDelete = (id) =>{
+  const [isOpenAddGameModal, setIsOpenAddGameModal] = useState(false)
+
+  const updateTableOnDelete = (id) => {
     setSampleData(sampleData.filter((item) => item.id !== id));
   }
 
-  const addGameToTable = (gameData) => {
-    console.log("Adding to game");
+  const addGameToMatch = (data) => {
+    // console.log("Adding to game");
+    setSampleData([...sampleData, data])
   }
+
+  const handleModalOpen = () => {
+    // console.log("Adding to game");
+    setIsOpenAddGameModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsOpenAddGameModal(false)
+  }
+
   return (
     <>
       <Table>
@@ -46,21 +59,21 @@ export default function MatchTable() {
             <MatchTableGameRow
               key={row.id}
               rowData={row}
-              updateTableOnDelete={()=>updateTableOnDelete(row.id)}
+              updateTableOnDelete={() => updateTableOnDelete(row.id)}
             />
           ))}
         </TableBody>
       </Table>
-      <Button 
-        variant="outlined" 
-        fullWidth 
+      <Button
+        variant="outlined"
+        fullWidth
         style={{ marginTop: "5px" }}
-        onClick={()=>addGameToTable()}
-        >
-          Add Game
-        </Button>
+        onClick={() => handleModalOpen()}
+      >
+        Add Game
+      </Button>
 
-        <AddGameModal isOpen={true}/>
+      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} handleInsertGame={addGameToMatch} />
     </>
   );
 }

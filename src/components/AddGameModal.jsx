@@ -1,22 +1,36 @@
 import React, { useState } from "react";
-import { Modal, Typography, Button, TextField, Paper, Grid, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Button, TextField, Paper, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 
 export default function AddGameModal({
-  rowKey,
   isOpen,
   handleInsertButton,
   handleCloseModal,
+  addGameToMatch
 }) {
 
-  const [value, setValue] = useState('');
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
+
 
   const handleChange = (event) => {
     const inputValue = event.target.value;
-    // Check if the input is a valid number
-    if (!isNaN(inputValue)) {
-      setValue(inputValue);
+    const playerId = event.target.id;
+
+    // Check if the input is a valid number and less than 1000
+    if (!isNaN(inputValue) && inputValue < 1000) {
+      if (playerId === 'player1Score') {
+        setPlayer1Score(inputValue);
+      } else if (playerId === 'player2Score') {
+        setPlayer2Score(inputValue);
+      }
     }
   };
+
+  const handleInsert = () => {
+    //{ id: sampleData.length + 1, winner: "Michael", winnerScore: 11, loserScore: 8 }
+    // addGameToMatch({winner:})
+  }
+
 
   return (
     <Dialog
@@ -46,31 +60,39 @@ export default function AddGameModal({
                   Michael
                 </TableCell>
                 <TableCell>
-                  <TextField 
-                    id="Score" 
-                    label="" 
-                    value={value}
+                  <TextField
+                    id="player1Score"
+                    label=""
+                    value={player1Score}
                     onChange={handleChange}
-                    inputProps={{ inputMode: 'numeric' }} 
+                    inputProps={{ inputMode: 'numeric' }}
+                    autoFocus
                   />
                 </TableCell>
               </TableRow>
-              {/* <TableRow key={2}>
+              <TableRow key={2}>
                 <TableCell>
                   Dominik
                 </TableCell>
                 <TableCell>
-                  <TextField id="Score" label="" inputProps={{ inputMode: 'numeric' }} />
+                  <TextField
+                    id="player2Score"
+                    label=""
+                    value={player2Score}
+                    onChange={handleChange}
+                    inputProps={{ inputMode: 'numeric' }}
+                    autoFocus
+                  />
                 </TableCell>
-              </TableRow> */}
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
 
       </DialogContent>
       <DialogActions>
-        <Button color="error">Cancel</Button>
-        <Button autoFocus>
+        <Button color="error" onClick={handleCloseModal}>Cancel</Button>
+        <Button>
           Insert
         </Button>
       </DialogActions>
