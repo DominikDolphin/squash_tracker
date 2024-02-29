@@ -5,19 +5,35 @@ import {
   TableRow,
   TableCell,
   TableHead,
+  Button,
 } from "@mui/material";
 import { useState } from "react";
 import MatchTableGameRow from "./MatchTableGameRow";
+import AddGameModal from "./AddGameModal";
 
-export default function MatchTable() {
+export default function MatchTable({players}) {
   const [sampleData, setSampleData] = useState([
-    { id: 1, winner: "Michael", winnerScore: 11, loserScore: 8 },
-    { id: 2, winner: "Dominik", winnerScore: 11, loserScore: 7 },
-    { id: 3, winner: "Michael", winnerScore: 14, loserScore: 12 },
+    { id: 1, winner: players[0].name, winnerScore: 11, loserScore: 8 },
+    { id: 2, winner: players[1].name, winnerScore: 11, loserScore: 7 },
+    { id: 3, winner: players[0].name, winnerScore: 14, loserScore: 12 },
   ]);
 
-  const updateTableOnDelete = (id) =>{
+  const [isOpenAddGameModal, setIsOpenAddGameModal] = useState(false)
+
+  const updateTableOnDelete = (id) => {
     setSampleData(sampleData.filter((item) => item.id !== id));
+  }
+
+  const addGameToMatch = (data) => {
+    setSampleData([...sampleData, data]);
+  }
+
+  const handleModalOpen = () => {
+    setIsOpenAddGameModal(true)
+  }
+
+  const handleCloseModal = () => {
+    setIsOpenAddGameModal(false)
   }
 
   return (
@@ -41,11 +57,21 @@ export default function MatchTable() {
             <MatchTableGameRow
               key={row.id}
               rowData={row}
-              updateTableOnDelete={()=>updateTableOnDelete(row.id)}
+              updateTableOnDelete={() => updateTableOnDelete(row.id)}
             />
           ))}
         </TableBody>
       </Table>
+      <Button
+        variant="outlined"
+        fullWidth
+        style={{ marginTop: "5px" }}
+        onClick={() => handleModalOpen()}
+      >
+        Add Game
+      </Button>
+
+      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} addGameToMatch={addGameToMatch} players={players}/>
     </>
   );
 }
