@@ -10,22 +10,37 @@ import {
 import { useState } from "react";
 import MatchTableGameRow from "./MatchTableGameRow";
 import AddGameModal from "./AddGameModal";
+import axios from "axios";
 
-export default function MatchTable({players}) {
-  const [sampleData, setSampleData] = useState([
-    { id: 1, winner: players[0].name, winnerScore: 11, loserScore: 8 },
-    { id: 2, winner: players[1].name, winnerScore: 11, loserScore: 7 },
-    { id: 3, winner: players[0].name, winnerScore: 14, loserScore: 12 },
-  ]);
+export default function MatchTable({players, match, changeMatchPlayers}) {
 
   const [isOpenAddGameModal, setIsOpenAddGameModal] = useState(false)
+  const [gamesData, setGamesData] = useState(match.games);
 
   const updateTableOnDelete = (id) => {
-    setSampleData(sampleData.filter((item) => item.id !== id));
+    axios
+      .delete(
+        `http://localhost:3000/api/match/6605b93d9f98196eb21a9278/${id}`,
+        {},
+        {
+          withCredentials: true,
+          headers: {
+            //   'Authorization': `Bearer ${cookies.token}`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDViYmE1N2M3OTk3ZmI3NTZkZjRiNSIsImlhdCI6MTcxMTY1MjM1NSwiZXhwIjoxNzExOTExNTU1fQ.DmX6CBBca`,
+            "Content-Type": "application/json", // Adjust content type if needed
+          },
+        }
+      ).then((response) => {
+        // console.log(response.data)
+        setGamesData(gamesData.filter((game) => game._id !== id));
+      }).catch((error) => {
+        console.log(error);
+      });
+
   }
 
   const addGameToMatch = (data) => {
-    setSampleData([...sampleData, data]);
+    setGamesData(prevGamesData => [...prevGamesData, data]);
   }
 
   const handleModalOpen = () => {
@@ -53,11 +68,16 @@ export default function MatchTable({players}) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {sampleData.map((row) => (
+          {gamesData.map((game) => (
             <MatchTableGameRow
-              key={row.id}
-              rowData={row}
-              updateTableOnDelete={() => updateTableOnDelete(row.id)}
+              key={game._id}
+              rowData={{
+                id: game._id,
+                winner: game.player1Score > game.player2Score ? 'player 1' : 'player 2',
+                winnerScore: game.player1Score > game.player2Score ? game.player1Score : game.player2Score,
+                loserScore: game.player1Score < game.player2Score ? game.player1Score : game.player2Score
+              }}
+              updateTableOnDelete={() => updateTableOnDelete(game._id)}
             />
           ))}
         </TableBody>
@@ -66,12 +86,13 @@ export default function MatchTable({players}) {
         variant="outlined"
         fullWidth
         style={{ marginTop: "5px" }}
-        onClick={() => handleModalOpen()}
+        onClick={handleModalOpen}
       >
         Add Game
       </Button>
 
-      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} addGameToMatch={addGameToMatch} players={players}/>
+      <AddGameModal isOpen={isOpenAddGameModal} handleCloseModal={handleCloseModal} addGameToMatch={addGameToMatch} players={players} changeMatchPlayers={changeMatchPlayers} />
     </>
   );
+
 }

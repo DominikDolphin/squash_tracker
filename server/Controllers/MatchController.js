@@ -1,4 +1,4 @@
-const { Match } = require("../Models/MatchModel");
+const { Match, Game } = require("../Models/MatchModel");
 
 async function getAllMatches(req, res) {
   try {
@@ -45,7 +45,43 @@ async function createMatch(req, res) {
   }
 }
 
+async function addGameToMatch(req, res) {
+  try {
+    const match = await Match.findById(req.params.id);
+    const game = new Game(req.body);
+    match.games.push(game);
+    const saved = await match.save();
+    if (saved) {
+      return res.status(201).json(game);
+    }
+    // res.status(201).json(await match.save());
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+async function deleteGameFromMatch(req, res) {
+  try {
+    const match = await Match.findById(req.params.matchid);
+    // const game = new Game(req.params.gameid);
+    // match.games.push(game);
+    match.games.pull(req.params.gameid);
+    const saved = await match.save();
+    if (saved) {
+      return res.status(201).json(`Game with id ${req.params.gameid} has been deleted`);
+    }
+    // res.status(201).json(await match.save());
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+
 module.exports = {
   getAllMatches,
   createMatch,
+  addGameToMatch,
+  deleteGameFromMatch
 };

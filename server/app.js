@@ -7,7 +7,7 @@ const apiRoutes = require("./Routes/index");
 
 app.use(
   cors({
-    origin: `http://localhost:5174`,
+    origin: `http://localhost:8080`,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
