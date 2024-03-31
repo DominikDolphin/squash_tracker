@@ -73,7 +73,7 @@ export default function MatchTable({players, match, changeMatchPlayers}) {
               key={game._id}
               rowData={{
                 id: game._id,
-                winner: game.player1Score > game.player2Score ? 'player 1' : 'player 2',
+                winner: game.player1Score > game.player2Score ? players[0].username : players[1].username,
                 winnerScore: game.player1Score > game.player2Score ? game.player1Score : game.player2Score,
                 loserScore: game.player1Score < game.player2Score ? game.player1Score : game.player2Score
               }}

@@ -29,6 +29,7 @@ export default function AddGameModal({
   const [player2Score, setPlayer2Score] = useState(0);
   const [scoreIsATie, setScoreIsATie] = useState(true);
 
+  console.log(players);
   const resetValues = () => {
     setPlayer1Score(0);
     setPlayer2Score(0);
@@ -140,7 +141,7 @@ export default function AddGameModal({
             </TableHead>
             <TableBody>
               <TableRow key={1}>
-                <TableCell>{players[0].name}</TableCell>
+                <TableCell>{players[0].username}</TableCell>
                 <TableCell>
                   <TextField
                     id="player1Score"
@@ -153,7 +154,7 @@ export default function AddGameModal({
                 </TableCell>
               </TableRow>
               <TableRow key={2}>
-                <TableCell>{players[1].name}</TableCell>
+                <TableCell>{players[1].username}</TableCell>
                 <TableCell>
                   <TextField
                     id="player2Score"

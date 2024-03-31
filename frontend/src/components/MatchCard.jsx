@@ -8,28 +8,33 @@ import axios from "axios";
 
 export default function MatchCard({match}) {
 
+  const [dataFetched, setDataFetched] = useState(false);
   
   const [players, setPlayers] = useState([
-    { id: match.players[0], username: '' }, // Initialize with an empty name
-    { id: match.players[1], username: '' }, // Initialize with an empty name
+    { _id: match.players[0], username: '' }, // Initialize with an empty name
+    { _id: match.players[1], username: '' }, // Initialize with an empty name
   ]);
+
+
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         // Fetch player names from the API
-        const user1NameResponse = await axios.get(`http://localhost:3000/api/user/66057249b4ca36c750b6b2bd`);
-        const user2NameResponse = await axios.get(`http://localhost:3000/api/user/66057249b4ca36c750b6b2bd`);
-  
+        // const user1NameResponse = await axios.get(`http://localhost:3000/api/user/66057249b4ca36c750b6b2bd`);
+        const user1NameResponse = await axios.get(`http://localhost:3000/api/user/${match.players[0]}`);
+        const user2NameResponse = await axios.get(`http://localhost:3000/api/user/${match.players[1]}`);
+
         // Check if the response data is not null
         const name1 = user1NameResponse.data && user1NameResponse.data.username ? user1NameResponse.data.username : "Player 1";
         const name2 = user2NameResponse.data && user2NameResponse.data.username ? user2NameResponse.data.username : "Player 2";
         
         // Update players' names in the state
         setPlayers([
-          { id: match.players[0], username: name1 },
-          { id: match.players[1], username: name2 },
+          { _id: match.players[0], username: name1 },
+          { _id: match.players[1], username: name2 },
         ]);
+        setDataFetched(true);
       } catch (error) {
         console.log(error);
       }
@@ -53,7 +58,11 @@ export default function MatchCard({match}) {
     setMatchSettingsModalOpen(false)
   }
 
-
+  // Render only after data is fetched
+  if (!dataFetched) {
+    return null; // or a loading indicator
+  }
+  
   return (
     <>
       
@@ -73,7 +82,7 @@ export default function MatchCard({match}) {
         </CardContent>
       </Card>
 
-      <MatchSettingsModal isOpen={matchSettingsModalOpen} players={players} handleCloseModal={closeSettingsModal} changeMatchPlayers={changeMatchPlayers} />
+      <MatchSettingsModal isOpen={matchSettingsModalOpen} players={players} handleCloseModal={closeSettingsModal} changeMatchPlayers={changeMatchPlayers} match={match}/>
     </>
   );
 }

@@ -78,10 +78,25 @@ async function deleteGameFromMatch(req, res) {
   }
 }
 
+async function updateMatchPlayers(req, res) {
+  try {
+    const match = await Match.findById(req.params.id);
+    match.players = req.body.players;
+    const saved = await match.save();
+    if (saved) {
+      return res.status(201).json(`Players have been updated`);
+    }
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
 
 module.exports = {
   getAllMatches,
   createMatch,
   addGameToMatch,
-  deleteGameFromMatch
+  deleteGameFromMatch,
+  updateMatchPlayers
 };
