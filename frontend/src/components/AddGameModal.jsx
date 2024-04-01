@@ -15,8 +15,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
+import { addGame } from "../services/matchService";
 
 export default function AddGameModal({
   isOpen,
@@ -24,10 +27,13 @@ export default function AddGameModal({
   addGameToMatch,
   players,
   changeMatchPlayers,
+  match,
 }) {
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
   const [scoreIsATie, setScoreIsATie] = useState(true);
+  const [requestError, setRequestError] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
   console.log(players);
   const resetValues = () => {
@@ -72,53 +78,37 @@ export default function AddGameModal({
     }
   };
 
-  const handleInsert = () => {
-    let winner, winnerScore, loserScore, winnerPlayerID, loserPlayerID;
+  const handleInsert = async () => {
+    try {
+      setIsFetching(true);
 
-    if (player1Score > player2Score) {
-      winner = players[0].name;
-      winnerPlayerID = players[0].id;
-      loserPlayerID = players[1].id;
-      winnerScore = player1Score;
-      loserScore = player2Score;
-    } else if (player1Score < player2Score) {
-      winner = players[1].name;
-      winnerPlayerID = players[1].id;
-      loserPlayerID = players[0].id;
+      const insertNewGame = await addGame(
+        match._id,
+        player1Score,
+        player2Score
+      );
 
-      winnerScore = player2Score;
-      loserScore = player1Score;
-    }
+      if (!insertNewGame.status === 201) {
+        setRequestError(true);
+        setIsFetching(false);
+        return;
+      }
 
-    axios
-      .post(
-        "http://localhost:3000/api/match/6605b93d9f98196eb21a9278/addGame",
-        {
-          player1Score: player1Score,
-          player2Score: player2Score,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            //   'Authorization': `Bearer ${cookies.token}`,
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDViYmE1N2M3OTk3ZmI3NTZkZjRiNSIsImlhdCI6MTcxMTY1MjM1NSwiZXhwIjoxNzExOTExNTU1fQ.DmX6CBBca`,
-            "Content-Type": "application/json", // Adjust content type if needed
-          },
-        }
-      )
-      .then((response) => {
-        addGameToMatch({
-          _id: response.data._id,
-          player1Score: player1Score,
-          player2Score: player2Score,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+      setIsFetching(false);
+
+      addGameToMatch({
+        _id: insertNewGame.data._id,
+        player1Score,
+        player2Score,
       });
 
-    resetValues();
-    handleCloseModal();
+      resetValues();
+      handleCloseModal();
+    } catch (error) {
+      setRequestError(true);
+      setIsFetching(false);
+      console.error("Error adding game:", error);
+    }
   };
 
   return (
@@ -170,12 +160,17 @@ export default function AddGameModal({
           </Table>
         </TableContainer>
       </DialogContent>
+      <Typography color="error" hidden={!requestError} align="center">
+        There was an error adding the game{" "}
+      </Typography>
+
       <DialogActions>
         <Button color="error" onClick={handleCloseModal}>
           Cancel
         </Button>
         <Button onClick={handleInsert} disabled={scoreIsATie}>
-          Insert
+          {/* If is fetching, making is a circularprogress */}
+          {isFetching ? <CircularProgress size={24} /> : "Insert"}
         </Button>
       </DialogActions>
     </Dialog>

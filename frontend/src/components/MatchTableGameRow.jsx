@@ -3,11 +3,12 @@ import IconButton from "@mui/material/IconButton";
 import { Delete, Edit } from "@mui/icons-material";
 import DeleteGameModal from "./DeleteGameModal";
 import { useState } from "react";
-
+import { deleteGame } from "../services/matchService";
 export default function MatchTableGameRow({
   rowKey,
   rowData,
-  updateTableOnDelete
+  updateTableOnDelete,
+  match
 }) {
 
   const [openModal, setOpenModal] = useState(false);
@@ -20,9 +21,22 @@ export default function MatchTableGameRow({
     setOpenModal(false);
   };
 
-  const handleConfirmDelete = () => {
-    setOpenModal(false);
-    updateTableOnDelete(rowKey);
+  const handleConfirmDelete =  async() => {
+
+    deleteGame(match._id, rowData.id)
+    .then((success) => {
+      if (success) {
+        // console.log("Game deleted successfully");
+        setOpenModal(false);
+        updateTableOnDelete(rowData.id);
+      } else {
+        console.error("Failed to delete game");
+      }
+    })
+    .catch((error) => {
+      console.error("An error occurred:", error);
+    });
+    
   };
 
   return (
