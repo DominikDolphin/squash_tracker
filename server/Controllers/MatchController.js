@@ -93,10 +93,49 @@ async function updateMatchPlayers(req, res) {
   }
 }
 
+async function updateMatchBestOf(req, res) {
+  try {
+    const match = await Match.findById(req.params.id);
+    match.bestOf = req.body.bestOf;
+    const saved = await match.save();
+    if (saved) {
+      return res.status(201).json(`Match Bestof has been updated to ${req.body.bestOf}`);
+    }
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+async function setMatchSettings(req, res) {
+  try {
+    const match = await Match.findById(req.params.id);
+
+    if (req.body.players) {
+      match.players = req.body.players;
+    }
+    if (req.body.bestOf) {
+      match.bestOf = req.body.bestOf;
+    }
+
+    const saved = await match.save();
+    if (saved) {
+      return res.status(201).json(`Match Bestof has been updated to ${req.body.bestOf}`);
+    }
+  }
+  catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 module.exports = {
   getAllMatches,
   createMatch,
   addGameToMatch,
   deleteGameFromMatch,
-  updateMatchPlayers
+  updateMatchPlayers,
+  updateMatchBestOf,
+  setMatchSettings
 };

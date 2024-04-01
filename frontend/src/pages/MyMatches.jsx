@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { Button } from "@mui/material";
 import axios from "axios";
 import MatchCard from "../components/MatchCard";
 
@@ -50,10 +51,14 @@ const MyMatches = () => {
       {/* For every match, create a MatchCard component */}
 
       {matches.map((match, index) => (
-        
-        <MatchCard key={index} match={match} />
-        
+        <MatchCard key={index} match={match}/>
       ))}
+
+    <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, backgroundColor: "#f0f0f0", padding: "10px", textAlign: "center", background: "rgba(240, 240, 240, 0.8)", backdropFilter: "blur(10px)"}}>
+      <Button variant="contained" color="success">
+        Create Match
+      </Button>
+    </footer>
     </>
   );
 };

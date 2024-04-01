@@ -15,7 +15,7 @@ export default function MatchCard({match}) {
     { _id: match.players[1], username: '' }, // Initialize with an empty name
   ]);
 
-
+  const [bestOf, setBestOf] = useState(match.bestOf);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -49,6 +49,10 @@ export default function MatchCard({match}) {
     setPlayers(newPlayers);
   }
 
+  const changeMatchBestOf = (newBestOf) => {
+    setBestOf(newBestOf);
+  }
+
   const openSettingsModal = () => {
     // console.log('Settings modal opened');
     setMatchSettingsModalOpen(true);
@@ -69,7 +73,7 @@ export default function MatchCard({match}) {
       <Card>
         <CardHeader
           title="🏆 Winner - Michael 🏆"
-          subheader={`Best out of ${match.bestOf}`}
+          subheader={`Best out of ${bestOf}`}
           style={{ paddingBottom: "0px", textAlign: "center" }}
           action={
             <IconButton aria-label="settings" onClick={openSettingsModal}>
@@ -82,7 +86,7 @@ export default function MatchCard({match}) {
         </CardContent>
       </Card>
 
-      <MatchSettingsModal isOpen={matchSettingsModalOpen} players={players} handleCloseModal={closeSettingsModal} changeMatchPlayers={changeMatchPlayers} match={match}/>
+      <MatchSettingsModal isOpen={matchSettingsModalOpen} players={players} handleCloseModal={closeSettingsModal} changeMatchBestOf={changeMatchBestOf} changeMatchPlayers={changeMatchPlayers} match={match}/>
     </>
   );
 }

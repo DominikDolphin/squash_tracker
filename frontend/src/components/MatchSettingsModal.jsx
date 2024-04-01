@@ -23,11 +23,13 @@ export default function MatchSettingsModal({
   addGameToMatch,
   players,
   changeMatchPlayers,
+  changeMatchBestOf,
   match,
 }) {
   const [player1, setPlayer1] = useState(players[0]);
   const [player2, setPlayer2] = useState(players[1]);
   const [allAvailablePlayers, setAllAvailablePlayers] = useState([]);
+  const [bestOf, setBestOf] = useState(match.bestOf);
 
   const handleAutocompleteChange = (value, player) => {
     player === "player1" ? setPlayer1(value) : setPlayer2(value);
@@ -53,6 +55,14 @@ export default function MatchSettingsModal({
     getOptionLabel: (option) => option.username,
   };
 
+
+  const handleCancelButton = () => {
+    setBestOf(match.bestOf);
+    setPlayer1(players[0]);
+    setPlayer2(players[1]);
+    handleCloseModal();
+  }
+
   const handleUpdateButton = () => {
     const newPlayers = [
       { id: player1._id, username: player1.username },
@@ -61,9 +71,10 @@ export default function MatchSettingsModal({
 
     axios
       .put(
-        `http://localhost:3000/api/match/${match._id}/updatePlayers`,
+        `http://localhost:3000/api/match/${match._id}/setMatchSettings`,
         {
           players: [player1._id, player2._id],
+          bestOf: bestOf,
         },
         {
           headers: {
@@ -72,12 +83,16 @@ export default function MatchSettingsModal({
         }
       )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
+        changeMatchPlayers(newPlayers);
+        changeMatchBestOf(bestOf);
+        handleCloseModal();
       })
       .catch((error) => {
         console.error(error);
       });
-    changeMatchPlayers(newPlayers);
+
+    
   };
 
   return (
@@ -139,7 +154,8 @@ export default function MatchSettingsModal({
                   <TextField
                     id="winsNeeded"
                     label=""
-                    value={5}
+                    value={bestOf}
+                    onChange={(e) => setBestOf(e.target.value)}
                     inputProps={{ inputMode: "numeric" }}
                     autoFocus
                   />
@@ -150,7 +166,7 @@ export default function MatchSettingsModal({
         </TableContainer>
       </DialogContent>
       <DialogActions>
-        <Button color="error" onClick={handleCloseModal}>
+        <Button color="error" onClick={handleCancelButton}>
           Cancel
         </Button>
         <Button onClick={handleUpdateButton}>Save</Button>
