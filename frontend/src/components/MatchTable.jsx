@@ -11,33 +11,11 @@ import {
 import { useState } from "react";
 import MatchTableGameRow from "./MatchTableGameRow";
 import AddGameModal from "./AddGameModal";
-import axios from "axios";
-import { deleteGame } from "../services/matchService";
-export default function MatchTable({players, match, changeMatchPlayers}) {
+export default function MatchTable({players, match, changeMatchPlayers, gamesData, setGamesData}) {
 
   const [isOpenAddGameModal, setIsOpenAddGameModal] = useState(false)
-  const [gamesData, setGamesData] = useState(match.games);
   const updateTableOnDelete =  async (id) => {
-    // axios
-    //   .delete(
-    //     `http://localhost:3000/api/match/6605b93d9f98196eb21a9278/${id}`,
-    //     {},
-    //     {
-    //       withCredentials: true,
-    //       headers: {
-    //         //   'Authorization': `Bearer ${cookies.token}`,
-    //         Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDViYmE1N2M3OTk3ZmI3NTZkZjRiNSIsImlhdCI6MTcxMTY1MjM1NSwiZXhwIjoxNzExOTExNTU1fQ.DmX6CBBca`,
-    //         "Content-Type": "application/json", // Adjust content type if needed
-    //       },
-    //     }
-    //   ).then((response) => {
-    //     // console.log(response.data)
-    //     setGamesData(gamesData.filter((game) => game._id !== id));
-    //   }).catch((error) => {
-    //     console.log(error);
-    //   });
-      setGamesData(gamesData.filter((game) => game._id !== id));
-
+    setGamesData(gamesData.filter((game) => game._id !== id));
   }
 
   const addGameToMatch = (data) => {

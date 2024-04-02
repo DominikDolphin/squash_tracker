@@ -9,6 +9,7 @@ const MyMatches = () => {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const [matches, setMatches] = useState([]);
+
   useEffect(() => {
     const verifyCookie = async () => {
       if (!cookies.token) {
@@ -30,11 +31,8 @@ const MyMatches = () => {
             },
           }
         );
-        // console.log(response.data)
-        // const { status, user } = response.data;
         console.log(getAllMatches.data)
         setMatches(getAllMatches.data);
-        // setUsername(user);
       } catch (err) {
         console.log(err);
       }

@@ -4,6 +4,16 @@ async function getUser(req, res) {
     try {
       const user = await User.findById(req.params.id);
 
+      // if query paramets are present, only show the fields requested
+      if (req.query.fields) {
+        const fields = req.query.fields.split(",");
+        const newUser = {};
+        fields.forEach((field) => {
+          newUser[field] = user[field];
+        });
+        return res.status(200).json(newUser);
+      }
+
       res.status(200).json(user);
     } catch (err) {
       console.error(err);

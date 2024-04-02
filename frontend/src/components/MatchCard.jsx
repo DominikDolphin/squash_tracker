@@ -1,38 +1,36 @@
 import { Card, CardContent, CardHeader, IconButton } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import MatchTable from "./MatchTable";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import MatchSettingsModal from "./MatchSettingsModal";
-import axios from "axios";
-
-
+import { checkWinner } from "../utils/matchUtils";
+import { getUsernameFromId  } from '../services/userService'
 export default function MatchCard({match}) {
 
   const [dataFetched, setDataFetched] = useState(false);
-  
+
   const [players, setPlayers] = useState([
-    { _id: match.players[0], username: '' }, // Initialize with an empty name
-    { _id: match.players[1], username: '' }, // Initialize with an empty name
+    { _id: match.players[0], username: '' },
+    { _id: match.players[1], username: '' },
   ]);
 
   const [bestOf, setBestOf] = useState(match.bestOf);
+  const [winnerTitle, setWinnerTitle] = useState('⏳ In Progress ⏳');
+  const [gamesData, setGamesData] = useState(match.games);
+  const [matchSettingsModalOpen, setMatchSettingsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Fetch player names from the API
-        // const user1NameResponse = await axios.get(`http://localhost:3000/api/user/66057249b4ca36c750b6b2bd`);
-        const user1NameResponse = await axios.get(`http://localhost:3000/api/user/${match.players[0]}`);
-        const user2NameResponse = await axios.get(`http://localhost:3000/api/user/${match.players[1]}`);
 
-        // Check if the response data is not null
-        const name1 = user1NameResponse.data && user1NameResponse.data.username ? user1NameResponse.data.username : "Player 1";
-        const name2 = user2NameResponse.data && user2NameResponse.data.username ? user2NameResponse.data.username : "Player 2";
-        
-        // Update players' names in the state
+        // Fetch usernames from user ids
+        const usernames = await Promise.all(match.players.map(async (playerId) => {
+          return await getUsernameFromId(playerId);
+        }));
+
         setPlayers([
-          { _id: match.players[0], username: name1 },
-          { _id: match.players[1], username: name2 },
+          { _id: match.players[0], username: usernames[0] },
+          { _id: match.players[1], username: usernames[1] },
         ]);
         setDataFetched(true);
       } catch (error) {
@@ -43,7 +41,13 @@ export default function MatchCard({match}) {
     fetchUser();
   }, [match]);
 
-  const [matchSettingsModalOpen, setMatchSettingsModalOpen] = useState(false);
+
+
+  useEffect(() => {
+    setWinnerTitle(checkWinner(gamesData, bestOf, players));
+  }, [gamesData, bestOf, players, gamesData, match]);
+
+  
 
   const changeMatchPlayers = (newPlayers) => {
     setPlayers(newPlayers);
@@ -72,7 +76,7 @@ export default function MatchCard({match}) {
       
       <Card>
         <CardHeader
-          title="🏆 Winner - Michael 🏆"
+          title={winnerTitle}
           subheader={`Best out of ${bestOf}`}
           style={{ paddingBottom: "0px", textAlign: "center" }}
           action={
@@ -82,7 +86,7 @@ export default function MatchCard({match}) {
           }
         />
         <CardContent style={{ PaddingTop: "0px" }}>
-          <MatchTable players={players} match={match} changeMatchPlayers={changeMatchPlayers}/>
+          <MatchTable players={players} match={match} changeMatchPlayers={changeMatchPlayers} gamesData={gamesData} setGamesData={setGamesData}/>
         </CardContent>
       </Card>
 

@@ -18,7 +18,6 @@ import {
   Typography,
   CircularProgress,
 } from "@mui/material";
-import axios from "axios";
 import { addGame } from "../services/matchService";
 
 export default function AddGameModal({
@@ -26,7 +25,6 @@ export default function AddGameModal({
   handleCloseModal,
   addGameToMatch,
   players,
-  changeMatchPlayers,
   match,
 }) {
   const [player1Score, setPlayer1Score] = useState(0);
@@ -35,7 +33,7 @@ export default function AddGameModal({
   const [requestError, setRequestError] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
 
-  console.log(players);
+  // console.log(players);
   const resetValues = () => {
     setPlayer1Score(0);
     setPlayer2Score(0);
